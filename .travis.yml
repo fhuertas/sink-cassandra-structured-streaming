@@ -6,11 +6,15 @@ services: docker
 before_install:
  - docker pull cassandra:3.11
  - docker run -d --name cassandra -v $(pwd)/integration/vol:/vol -p 9042:9042 cassandra:3.11
- - sleep 20
  - docker exec cassandra sh -c /vol/init_db.sh
 
 scala:
    - 2.10.7
    - 2.11.12
 
-script: sbt ++$TRAVIS_SCALA_VERSION test
+script:
+   - sbt/generate-build-scripts.sh 2.2.0;
+   - sbt ++$TRAVIS_SCALA_VERSION coverage test
+   - sbt coverageReport
+after_success:
+- sbt coveralls

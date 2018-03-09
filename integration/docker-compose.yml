@@ -3,6 +3,7 @@ version: '3'
 services:
   cassandra:
     image: "cassandra:3.11"
+    entrypoint: bash -c "/vol/init_db.sh & /docker-entrypoint.sh"
     volumes:
       - ./vol:/vol
     ports:
